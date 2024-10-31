@@ -27,6 +27,15 @@ public class Product implements Serializable {
 	private String condition;		// 상태
 	private String file;			// 파일 경로 변수 추가
 	private int quantity;			// 장바구니 개수 
+	private int amount;
+
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
 
 	// 
 	private String userId;			// 회원ID
@@ -151,9 +160,11 @@ public class Product implements Serializable {
 	public String toString() {
 		return "Product [productId=" + productId + ", name=" + name + ", unitPrice=" + unitPrice + ", description="
 				+ description + ", manufacturer=" + manufacturer + ", category=" + category + ", unitsInStock="
-				+ unitsInStock + ", condition=" + condition + ", file=" + file + ", quantity=" + quantity + ", userId="
-				+ userId + ", orderNo=" + orderNo + ", type=" + type + "]";
+				+ unitsInStock + ", condition=" + condition + ", file=" + file + ", quantity=" + quantity + ", amount="
+				+ amount + ", userId=" + userId + ", orderNo=" + orderNo + ", type=" + type + "]";
 	}
+
+
 	
 
 }

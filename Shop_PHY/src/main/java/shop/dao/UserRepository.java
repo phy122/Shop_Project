@@ -1,10 +1,11 @@
 package shop.dao;
 
+
+
 import java.sql.SQLException;
 import java.util.UUID;
 
 import shop.dto.PersistentLogin;
-import shop.dto.Product;
 import shop.dto.User;
 
 public class UserRepository extends JDBConnection {
@@ -15,7 +16,29 @@ public class UserRepository extends JDBConnection {
 	 * @return
 	 */
 	public int insert(User user) {
+		int result = 0;
 		
+		String sql = "INSERT INTO user(id, password, name, gender, birth, mail, phone, address, regist_day)" +
+					 "values(?,?,?,?,?,?,?,?,?)";
+		
+		try  {
+				psmt = con.prepareStatement(sql);
+				
+	            psmt.setString(1, user.getId());         
+	            psmt.setString(2, user.getPassword());       
+	            psmt.setString(3, user.getName());                  
+	            psmt.setString(4, user.getGender());      
+	            psmt.setString(5, user.getBirth());      
+	            psmt.setString(6, user.getMail());      
+	            psmt.setString(7, user.getPhone());      
+	            psmt.setString(8, user.getAddress());      
+	            psmt.setString(9, user.getRegistDay());      
+
+	            result = psmt.executeUpdate();               
+		        } catch (SQLException e) {
+		            e.printStackTrace();
+		        }
+		        return result;
 	}
 	
 	
@@ -26,7 +49,32 @@ public class UserRepository extends JDBConnection {
 	 * @return
 	 */
 	public User login(String id, String pw) {
+		String sql = "SELECT* " +
+					 "FROM user"+
+					 "WHERE id = ? AND pw = ?";
+		User user = null;
+		try {
+			psmt = con.prepareStatement(sql);
+			psmt.setString(1, id);
+			psmt.setString(1, pw);
+			rs = psmt.executeQuery();
+			if(rs.next()) {
+				user = new User();
+				user.setId(rs.getString("id"));
+				user.setPassword(rs.getString("password"));
+				user.setName(rs.getString("name"));
+				user.setGender(rs.getString("gender"));
+				user.setBirth(rs.getString("birth"));
+				user.setMail(rs.getString("mail"));
+				user.setPhone(rs.getString("phone"));
+				user.setAddress(rs.getString("address"));
+				user.setRegistDay(rs.getString("regist_day"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
+		return user;
 	}
 	
 	
@@ -35,11 +83,35 @@ public class UserRepository extends JDBConnection {
 	/**
 	 * 로그인을 위한 사용자 조회
 	 * @param id
-	 * @param pw
+	 * @param 
 	 * @return
 	 */
 	public User getUserById(String id) {
+		String sql = "SELECT* " +
+				 "FROM user"+
+				 "WHERE id = ?";
+		User user = null;
+		try {
+			psmt = con.prepareStatement(sql);
+			psmt.setString(1, id);
+			rs = psmt.executeQuery();
+			if(rs.next()) {
+				user = new User();
+				user.setId(rs.getString("id"));
+				user.setPassword(rs.getString("password"));
+				user.setName(rs.getString("name"));
+				user.setGender(rs.getString("gender"));
+				user.setBirth(rs.getString("birth"));
+				user.setMail(rs.getString("mail"));
+				user.setPhone(rs.getString("phone"));
+				user.setAddress(rs.getString("address"));
+				user.setRegistDay(rs.getString("regist_day"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
+		return user;
 	}
 	
 	
@@ -49,7 +121,27 @@ public class UserRepository extends JDBConnection {
 	 * @return
 	 */
 	public int update(User user) {
-		
+		 String sql = "UPDATE user SET id = ?, password = ?, name = ?, gender = ?, birth = ?, mail = ?, phone = ?, address = ?, regist_day = ? WHERE id = ?";
+	     int result = 0;
+	        
+	     try {
+	    	 	psmt = con.prepareStatement(sql);
+	    	 	
+	            psmt.setString(1, user.getId());         
+	            psmt.setString(2, user.getPassword());       
+	            psmt.setString(3, user.getName());                  
+	            psmt.setString(4, user.getGender());      
+	            psmt.setString(5, user.getBirth());      
+	            psmt.setString(6, user.getMail());      
+	            psmt.setString(7, user.getPhone());      
+	            psmt.setString(8, user.getAddress());      
+	            psmt.setString(8, user.getRegistDay());      
+
+	            result = psmt.executeUpdate();               
+		        } catch (SQLException e) {
+		            e.printStackTrace();
+		        }
+		        return result;
 	}
 
 
@@ -59,7 +151,18 @@ public class UserRepository extends JDBConnection {
 	 * @return
 	 */
 	public int delete(String id) {
+		int result = 0;
+		String sql = " DELETE FROM user"
+				   + " WHERE id = ? ";
 		
+		try {
+			psmt = con.prepareStatement(sql);
+			psmt.setString(1, id);
+			result = psmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	/**

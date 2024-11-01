@@ -4,6 +4,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<%
+	String productId = request.getParameter("product_id");
+	ProductRepository productRepository = new ProductRepository();
+	Product product = productRepository.getProductById(productId);
+	pageContext.setAttribute("product", product);
+	
+	String root = request.getContextPath();  // root 변수를 선언 및 초기화
+%>
 <html>
 <head>
 	<meta charset="UTF-8">
@@ -22,7 +30,7 @@
 	
 	<div class="container shop">
 		<!-- [NEW] enctype 추가 -->
-		<form name="product" action="./update_pro.jsp" onsubmit="return checkProduct()" method="post" enctype="multipart/form-data">
+		<form name="product" action="<%= root %>/shop/update_pro.jsp" onsubmit="return checkProduct()" method="post" enctype="multipart/form-data">
 			
 			<div class="input-group mb-3 row">
 				<img src="img?id=P100001" class="w-100 p-2">
@@ -31,34 +39,34 @@
 				
 			<div class="input-group mb-3 row">
 				<label class="input-group-text col-md-2" id="">상품 이미지</label>
-				<input type="file" class="form-control col-md-10" name="file">
+				<input type="file" class="form-control col-md-10" name="file" value="${product.file}">
 			</div>	
 		
 			<div class="input-group mb-3 row">
 				<label class="input-group-text col-md-2" id="">상품 코드</label>
-				<input type="text" class="form-control col-md-10" name="productId" value="P100001" readonly="">
+				<input type="text" class="form-control col-md-10" name="productId" value="${product.productId}" readonly="">
 			</div>
 			
 			<div class="input-group mb-3 row">
 				<label class="input-group-text col-md-2" id="">상품명</label>
-				<input type="text" class="form-control col-md-10" name="name" value="자바 프로그래밍">
+				<input type="text" class="form-control col-md-10" name="name" value="${product.name}">
 			</div>
 			
 			<div class="input-group mb-3 row">
 				<label class="input-group-text col-md-2" id="">가격</label>
-				<input type="number" class="form-control col-md-10" name="unitPrice" value="50000">
+				<input type="number" class="form-control col-md-10" name="unitPrice" value="${product.unitPrice}">
 			</div>
 			<div class="input-group mb-3 row">
 				<label class="input-group-text w-100" id="">상세 정보</label>
-				<textarea class="form-control" name="description" style="height: 200px !important;">안녕하세요 자바프로그래밍 강의입니다.</textarea>
+				<textarea class="form-control" name="description" style="height: 200px !important;">${product.description}</textarea>
 			</div>
 			<div class="input-group mb-3 row">
 				<label class="input-group-text col-md-2" id="">제조사</label>
-				<input type="text" class="form-control col-md-10" name="manufacturer" value="알로하클래스">
+				<input type="text" class="form-control col-md-10" name="manufacturer" value="${product.manufacturer}">
 			</div>
 			<div class="input-group mb-3 row">
 				<label class="input-group-text col-md-2" id="">분류</label>
-				<input type="text" class="form-control col-md-10" name="category" value="강의">
+				<input type="text" class="form-control col-md-10" name="category" value="${product.category}">
 			</div>
 			<div class="input-group mb-3 row">
 				<label class="input-group-text col-md-2" id="">재고 수</label>
@@ -89,7 +97,7 @@
 			</div>
 			
 			<div class="d-flex justify-content-between mt-5 mb-5">
-				<a href="./products.jsp" class="btn btn-lg btn-secondary">목록</a>
+				<a href="<%= root %>/shop/products.jsp" class="btn btn-lg btn-secondary">목록</a>
 				<input type="submit" class="btn btn-lg btn-success" value="수정">
 			</div>
 		

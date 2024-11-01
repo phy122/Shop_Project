@@ -12,6 +12,7 @@
 	<jsp:include page="/layout/link.jsp" />
 </head>
 <body>
+	<% String root = request.getContextPath(); %>
 	<jsp:include page="/layout/header.jsp" />
 	<div class="px-4 py-5 my-5 text-center">
 		<h1 class="display-5 fw-bold text-body-emphasis">주문 완료</h1>
@@ -34,7 +35,7 @@
 			</tbody></table>
 			
 			<div class="btn-box d-flex justify-content-center">
-				<a href="/Shop/user/order.jsp" class="btn btn-primary btn-lg px-4 gap-3">주문내역</a>
+				<a href="<%= root %>/user/order.jsp" class="btn btn-primary btn-lg px-4 gap-3">주문내역</a>
 			</div>
 		</div>
 	</div>

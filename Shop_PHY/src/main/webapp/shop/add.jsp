@@ -12,6 +12,7 @@
 	<jsp:include page="/layout/link.jsp" />
 </head>
 <body>
+	<% String root = request.getContextPath(); %>
 	<jsp:include page="/layout/header.jsp" />
 	<div class="px-4 py-5 my-5 text-center">
 		<h1 class="display-5 fw-bold text-body-emphasis">상품 등록</h1>
@@ -22,7 +23,7 @@
 	
 	<div class="container shop">
 		<!-- [NEW] enctype 추가 -->
-		<form name="product" action="./add_pro.jsp" onsubmit="return checkProduct()" method="post" enctype="multipart/form-data">
+		<form name="product" action="<%= root %>/shop/add_pro.jsp" onsubmit="return checkProduct()" method="post" enctype="multipart/form-data">
 			
 			<!-- [NEW] 파일 입력 추가 -->
 			<div class="input-group mb-3 row">
@@ -85,7 +86,7 @@
 			</div>
 			
 			<div class="d-flex justify-content-between mt-5 mb-5">
-				<a href="./products.jsp" class="btn btn-lg btn-secondary">목록</a>
+				<a href="<%= root %>/shop/products.jsp" class="btn btn-lg btn-secondary">목록</a>
 				<input type="submit" class="btn btn-lg btn-primary" value="등록">
 			</div>
 		

@@ -12,13 +12,14 @@
 	<jsp:include page="/layout/link.jsp" />
 </head>
 <body>
+	<% String root = request.getContextPath(); %>
 	<jsp:include page="/layout/header.jsp" />
 	<div class="px-4 py-5 my-5 text-center">
 		<h1 class="display-5 fw-bold text-body-emphasis">주문 정보</h1>
 	</div>
 	
 	<div class="container order mb-5">
-		<form action="complete.jsp" method="post">
+		<form action="<%= root %>/shop/complete.jsp" method="post">
 		<!-- 배송정보 -->
 		<div class="ship-box">
 			<table class="table ">
@@ -98,7 +99,7 @@
 		<!-- 버튼 영역 -->
 		<div class="d-flex justify-content-between mt-5 mb-5">
 			<div class="item">
-				<a href="ship.jsp" class="btn btn-lg btn-success">이전</a>
+				<a href="<%= root %>/shop/ship.jsp" class="btn btn-lg btn-success">이전</a>
 				<!-- 취소 프로세스는 이어서... -->				
 				<a href="" class="btn btn-lg btn-danger">취소</a>				
 			</div>

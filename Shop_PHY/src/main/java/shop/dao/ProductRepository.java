@@ -27,6 +27,7 @@ public class ProductRepository extends JDBConnection {
 			rs = psmt.executeQuery();
 			while (rs.next()) {
 				Product products = new Product();
+				products.setProductId(rs.getString("product_id"));
 				products.setFile(rs.getString("file"));
 				products.setName(rs.getString("name"));
 				products.setDescription(rs.getString("description"));
@@ -74,31 +75,36 @@ public class ProductRepository extends JDBConnection {
 	 * @return
 	 */
 	public Product getProductById(String productId) {
-		String sql = "SELECT* " +
-				 "FROM product"+
-				 "WHERE product_id = ?";
-		Product product = null;
-		try {
-			psmt = con.prepareStatement(sql);
-			psmt.setString(1, productId);
-			rs = psmt.executeQuery();
-			if(rs.next()) {
-				product = new Product();
-				product.setFile(rs.getString("file"));
-				product.setProductId(rs.getString("product_id"));
-				product.setName(rs.getString("name"));
-				product.setUnitPrice(rs.getInt("unit_price"));
-				product.setManufacturer(rs.getString("manufacturer"));
-				product.setCategory(rs.getString("category"));
-				product.setUnitsInStock(rs.getInt("units_in_stock"));
-				product.setCondition(rs.getString("condition"));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return product;
+	    System.out.println("Searching for product with ID: " + productId); // 디버깅용 출력
+	    String sql = "SELECT * FROM product WHERE product_id = ?";
+	    Product product = null;
+	    try {
+	        psmt = con.prepareStatement(sql);
+	        psmt.setString(1, productId);
+	        rs = psmt.executeQuery();
+	        if(rs.next()) {
+	            product = new Product();
+	            product.setFile(rs.getString("file"));
+	            product.setProductId(rs.getString("product_id"));
+	            product.setName(rs.getString("name"));
+	            product.setUnitPrice(rs.getInt("unit_price"));
+	            product.setManufacturer(rs.getString("manufacturer"));
+	            product.setCategory(rs.getString("category"));
+	            product.setUnitsInStock(rs.getInt("units_in_stock"));
+	            product.setCondition(rs.getString("condition"));
+	            System.out.println("Product found: " + product.getName()); // 찾은 상품 출력
+	        } else {
+	            System.out.println("No product found with ID: " + productId); // 상품을 찾지 못한 경우
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    return product;
 	}
+
+
+
 	
 	
 	/**

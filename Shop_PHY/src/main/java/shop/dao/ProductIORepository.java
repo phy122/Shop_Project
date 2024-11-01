@@ -1,5 +1,6 @@
 package shop.dao;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,20 +19,21 @@ public class ProductIORepository extends JDBConnection {
 	public int insert(Product product, String type) {
 		int result = 0;
 		
-		String sql = "INSERT INTO product_io(io_no, product_id, order_no, amount, type, io_date, user_id)" +
-				     "values(?,?,?,?,?,NOW(),?)";
+		String sql = " INSERT INTO product_io(order_no, product_id, amount, type, io_date, user_id) " +
+				     " values(?,?,?,?,?,NOW(),?) ";
 		
 
         try (
              PreparedStatement psmt = con.prepareStatement(sql)) {
 
-            psmt.setString(1, product.getProductId());   // 상품 ID
-            psmt.setInt(2, product.getOrderNo());        // 주문 번호
-            psmt.setInt(3, product.getQuantity());       // 입출고 수량 (장바구니 개수)
-            psmt.setString(4, type);                     // 입출고 유형 (IN/OUT)
-            psmt.setString(5, product.getUserId());      // 회원 ID
+        	psmt.setInt(1, product.getOrderNo());        
+            psmt.setString(2, product.getProductId());
+            psmt.setInt(3, product.getAmount());
+            psmt.setString(4, type);                     
+            psmt.setString(5, product.getIoDate());      
+            psmt.setString(6, product.getUserId());      
 
-            result = psmt.executeUpdate();               // 쿼리 실행
+            result = psmt.executeUpdate();               
         } catch (SQLException e) {
             e.printStackTrace();
         }

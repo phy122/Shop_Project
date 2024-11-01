@@ -69,12 +69,11 @@ public class OrderRepository extends JDBConnection {
 	public List<Product> list(String userId) {
 		List<Product> products = new ArrayList<>();
 		
-		String sql = "SELECT  p.name, p.unit_price" +
-					 "o.order_no, io.amount" +
-					 "FROM `order` o " +
-                     "JOIN product_io io ON o.order_no = io.order_no" +
-                     "JOIN product p ON io.product_id = p.product_id" +
-                     "o.user_id = ? ";
+		 String sql = "SELECT p.name, p.unit_price, o.order_no, io.amount " +
+                 	  "FROM `order` o " +
+                 	  "JOIN product_io io ON o.order_no = io.order_no " +
+                 	  "JOIN product p ON io.product_id = p.product_id " +
+                 	  "WHERE o.user_id = ?";
 		
 		 	try{
 			 		 psmt = con.prepareStatement(sql);
@@ -106,12 +105,11 @@ public class OrderRepository extends JDBConnection {
 	 */
 	public List<Product> list(String phone, String orderPw) {
 		List<Product> products = new ArrayList<>();
-		String sql = "SELECT  p.name, p.unit_price" +
-				 "o.order_no, io.amount" +
-				 "FROM `order` o " +
-                "JOIN product_io io ON o.order_no = io.order_no" +
-                "JOIN product p ON io.product_id = p.product_id" +
-                "o.user_id = ? ";
+		String sql = "SELECT p.name, p.unit_price, o.order_no, io.amount " +
+                "FROM `order` o " +
+                "JOIN product_io io ON o.order_no = io.order_no " +
+                "JOIN product p ON io.product_id = p.product_id " +
+                "WHERE o.phone = ? AND o.order_pw = ?";
 
         try  {
         	psmt = con.prepareStatement(sql);

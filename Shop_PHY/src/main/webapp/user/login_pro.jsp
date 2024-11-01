@@ -27,7 +27,7 @@
 		session.setAttribute("loginId", loginUser.getId());
 		session.setAttribute("loginUser", loginUser);
 		
-		response.sendRedirect("index.jsp");
+		response.sendRedirect("complete.jsp?msg=0");
 	}
 	// 아이디 저장
 	String rememberId = request.getParameter("remember-id");
@@ -51,23 +51,23 @@
 	cookieToken.setPath("/");
 	
 	if(rememberMe != null && rememberMe.equals("on")){
-		UserRepository userRepository = new UserRepository();
-		PersistentLogin persistentLogin = userRepository.refreshToken(id);
-		String token = null;
-		if(persistentLogin != null){
-			token = persistentLogin.getToken();
-		}
+		 UserRepository userRepository = new UserRepository();
+		 String token  = userRepository.refreshToken(id);
+		 
 		cookieRememberMe.setValue(URLEncoder.encode(rememberMe, "UTF-8"));
 		cookieToken.setValue(URLEncoder.encode(token, "UTF-8"));
 	}
 	else{
 		cookieRememberMe.setMaxAge(0);
+		cookieToken.setMaxAge(0);
 	}
 			
 	// 쿠키 전달
+	response.addCookie(cookieRememberId);
+	response.addCookie(cookieId);
+	response.addCookie(cookieRememberMe);
+	response.addCookie(cookieToken);
 	
-	// 로그인 성공 페이지로 이동
-	response.sendRedirect("complete.jsp?msg=0");		
 
 %>
 

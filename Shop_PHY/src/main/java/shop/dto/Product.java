@@ -1,6 +1,7 @@
 package shop.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Product 자바빈즈
@@ -28,6 +29,7 @@ public class Product implements Serializable {
 	private String file;			// 파일 경로 변수 추가
 	private int quantity;			// 장바구니 개수 
 	private int amount;
+	private String ioDate;
 
 	public int getAmount() {
 		return amount;
@@ -162,6 +164,14 @@ public class Product implements Serializable {
 				+ description + ", manufacturer=" + manufacturer + ", category=" + category + ", unitsInStock="
 				+ unitsInStock + ", condition=" + condition + ", file=" + file + ", quantity=" + quantity + ", amount="
 				+ amount + ", userId=" + userId + ", orderNo=" + orderNo + ", type=" + type + "]";
+	}
+
+	public String getIoDate() {
+		return ioDate;
+	}
+
+	public void setIoDate(String ioDate) {
+		this.ioDate = ioDate;
 	}
 
 

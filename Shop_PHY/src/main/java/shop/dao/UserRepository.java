@@ -16,29 +16,41 @@ public class UserRepository extends JDBConnection {
 	 * @return
 	 */
 	public int insert(User user) {
-		int result = 0;
-		
-		String sql = "INSERT INTO user(id, password, name, gender, birth, mail, phone, address, regist_day)" +
-					 "values(?,?,?,?,?,?,?,?,?)";
-		
-		try  {
-				psmt = con.prepareStatement(sql);
-				
-	            psmt.setString(1, user.getId());         
-	            psmt.setString(2, user.getPassword());       
-	            psmt.setString(3, user.getName());                  
-	            psmt.setString(4, user.getGender());      
-	            psmt.setString(5, user.getBirth());      
-	            psmt.setString(6, user.getMail());      
-	            psmt.setString(7, user.getPhone());      
-	            psmt.setString(8, user.getAddress());      
-	            psmt.setString(9, user.getRegistDay());      
+	    int result = 0;
+	    
+	    String sql = "INSERT INTO user(id, password, name, gender, birth, mail, phone, address, regist_day) " +
+	                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	            result = psmt.executeUpdate();               
-		        } catch (SQLException e) {
-		            e.printStackTrace();
-		        }
-		        return result;
+	    try {
+	        // Connection이 null인지 확인
+	        if (con == null) {
+	            throw new SQLException("Database connection is null");
+	        }
+
+	        psmt = con.prepareStatement(sql);
+	        psmt.setString(1, user.getId());
+	        psmt.setString(2, user.getPassword());
+	        psmt.setString(3, user.getName());
+	        psmt.setString(4, user.getGender());
+	        psmt.setString(5, user.getBirth());
+	        psmt.setString(6, user.getMail());
+	        psmt.setString(7, user.getPhone());
+	        psmt.setString(8, user.getAddress());
+	        psmt.setString(9, user.getRegistDay());
+
+	        result = psmt.executeUpdate(); // 쿼리 실행
+	    } catch (SQLException e) {
+	        e.printStackTrace(); // 예외 메시지 출력
+	    } finally {
+	        try {
+	            if (psmt != null) psmt.close();
+	            if (con != null) con.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return result; // result 값 반환
 	}
 	
 	
@@ -49,14 +61,12 @@ public class UserRepository extends JDBConnection {
 	 * @return
 	 */
 	public User login(String id, String pw) {
-		String sql = "SELECT* " +
-					 "FROM user"+
-					 "WHERE id = ? AND pw = ?";
+		String sql = "SELECT * FROM user WHERE id = ? AND password = ?";
 		User user = null;
 		try {
 			psmt = con.prepareStatement(sql);
 			psmt.setString(1, id);
-			psmt.setString(1, pw);
+			psmt.setString(2, pw);
 			rs = psmt.executeQuery();
 			if(rs.next()) {
 				user = new User();
@@ -87,9 +97,7 @@ public class UserRepository extends JDBConnection {
 	 * @return
 	 */
 	public User getUserById(String id) {
-		String sql = "SELECT* " +
-				 "FROM user"+
-				 "WHERE id = ?";
+		String sql = "SELECT * FROM user WHERE id = ?";
 		User user = null;
 		try {
 			psmt = con.prepareStatement(sql);
@@ -121,27 +129,30 @@ public class UserRepository extends JDBConnection {
 	 * @return
 	 */
 	public int update(User user) {
-		 String sql = "UPDATE user SET id = ?, password = ?, name = ?, gender = ?, birth = ?, mail = ?, phone = ?, address = ?, regist_day = ? WHERE id = ?";
-	     int result = 0;
-	        
-	     try {
-	    	 	psmt = con.prepareStatement(sql);
-	    	 	
-	            psmt.setString(1, user.getId());         
-	            psmt.setString(2, user.getPassword());       
-	            psmt.setString(3, user.getName());                  
-	            psmt.setString(4, user.getGender());      
-	            psmt.setString(5, user.getBirth());      
-	            psmt.setString(6, user.getMail());      
-	            psmt.setString(7, user.getPhone());      
-	            psmt.setString(8, user.getAddress());      
-	            psmt.setString(8, user.getRegistDay());      
+	    // SQL UPDATE 문
+	    String sql = "UPDATE user SET id = ?,  name = ?, gender = ?, birth = ?, mail = ?, phone = ?, address = ?, regist_day = ? WHERE id = ?";
+	    int result = 0;
 
-	            result = psmt.executeUpdate();               
-		        } catch (SQLException e) {
-		            e.printStackTrace();
-		        }
-		        return result;
+	    try {
+	        psmt = con.prepareStatement(sql);
+
+	        // PreparedStatement에 파라미터 설정
+	        psmt.setString(1, user.getId());               // 1: id
+	        psmt.setString(2, user.getName());             // 3: name
+	        psmt.setString(3, user.getGender());           // 4: gender
+	        psmt.setString(4, user.getBirth());            // 5: birth
+	        psmt.setString(5, user.getMail());             // 6: mail
+	        psmt.setString(6, user.getPhone());            // 7: phone
+	        psmt.setString(7, user.getAddress());          // 8: address
+	        psmt.setString(8, user.getRegistDay());       // 9: regist_day
+	        psmt.setString(9, user.getId());              // 10: WHERE id (업데이트할 사용자의 ID)
+
+	        // 쿼리 실행
+	        result = psmt.executeUpdate();               
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return result;
 	}
 
 

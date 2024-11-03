@@ -10,6 +10,78 @@
 	<title>상품 목록</title>
 	<jsp:include page="/layout/meta.jsp" /> 
 	<jsp:include page="/layout/link.jsp" />
+	<script>
+    function checkProduct() {
+        var productId = document.product.productId.value;
+        var name = document.product.name.value;
+        var unitPrice = document.product.unitPrice.value;
+        var description = document.product.description.value;
+        var manufacturer = document.product.manufacturer.value;
+        var category = document.product.category.value;
+        var unitsInStock = document.product.unitsInStock.value;
+        var condition = document.querySelector('input[name="condition"]:checked');
+
+        var productIdPattern = /^P\d{6}$/;
+        
+        // 상품 코드 유효성 검사
+        if (!productIdPattern.test(productId)) {
+            alert("상품 코드는 'P'로 시작하고 숫자 6자리로 입력해야 합니다.");
+            document.product.productId.focus();
+            return false;
+        }
+
+        // 상품명 유효성 검사
+        if (!name) {
+            alert("상품명을 입력해 주세요.");
+            document.product.name.focus();
+            return false;
+        }
+
+        // 가격 유효성 검사
+        if (!unitPrice || unitPrice <= 0) {
+            alert("유효한 가격을 입력해 주세요.");
+            document.product.unitPrice.focus();
+            return false;
+        }
+
+        // 상세 정보 유효성 검사
+        if (!description) {
+            alert("상세 정보를 입력해 주세요.");
+            document.product.description.focus();
+            return false;
+        }
+
+        // 제조사 유효성 검사
+        if (!manufacturer) {
+            alert("제조사를 입력해 주세요.");
+            document.product.manufacturer.focus();
+            return false;
+        }
+
+        // 분류 유효성 검사
+        if (!category) {
+            alert("분류를 입력해 주세요.");
+            document.product.category.focus();
+            return false;
+        }
+
+        // 재고 수 유효성 검사
+        if (!unitsInStock || unitsInStock < 0) {
+            alert("유효한 재고 수를 입력해 주세요.");
+            document.product.unitsInStock.focus();
+            return false;
+        }
+
+        // 상태 유효성 검사
+        if (!condition) {
+            alert("제품 상태를 선택해 주세요.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+	
 </head>
 <body>
 	<% String root = request.getContextPath(); %>

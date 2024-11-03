@@ -15,9 +15,18 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>상품 목록</title>
+	<title>상품 수정</title>
 	<jsp:include page="/layout/meta.jsp" /> 
 	<jsp:include page="/layout/link.jsp" />
+	<script>
+        // 상태 값에 맞게 체크박스 선택 설정
+        function setCondition() {
+            const condition = "${product.condition}"; // EL 사용
+            document.getElementById("condition-" + condition.toLowerCase()).checked = true;
+        }
+        // 폼이 로드된 후 상태 값을 설정
+        window.onload = setCondition;
+    </script>
 </head>
 <body>
 	<jsp:include page="/layout/header.jsp" />
@@ -33,7 +42,7 @@
 		<form name="product" action="<%= root %>/shop/update_pro.jsp" onsubmit="return checkProduct()" method="post" enctype="multipart/form-data">
 			
 			<div class="input-group mb-3 row">
-				<img src="img?id=P100001" class="w-100 p-2">
+				<img src="img?id=${product.file}" class="w-100 p-2">
 			</div>
 			
 				

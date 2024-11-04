@@ -49,14 +49,18 @@ public class ProductRepository extends JDBConnection {
 	public List<Product> list(String keyword) {
 		List<Product> productList = new ArrayList<Product>();
 		
-		String sql = "SELECT * " +
-					 "FROM product"+
-					 "WHERE name LIKE CONCAT('%', ? , '%')";
+		String sql = "SELECT * FROM product WHERE name LIKE CONCAT('%', ? , '%') OR description LIKE CONCAT('%', ? , '%') OR manufacturer LIKE CONCAT('%', ? , '%') OR category LIKE CONCAT('%', ? , '%')";
 		try {
 			psmt = con.prepareStatement(sql);
+			int index = 1;
+			psmt.setString(index++, keyword);
+			psmt.setString(index++, keyword);
+			psmt.setString(index++, keyword);
+			psmt.setString(index++, keyword);
 			rs = psmt.executeQuery();
 			while (rs.next()) {
 				Product products = new Product();
+				products.setProductId(rs.getString("product_id"));
 				products.setFile(rs.getString("file"));
 				products.setName(rs.getString("name"));
 				products.setDescription(rs.getString("description"));
@@ -114,8 +118,8 @@ public class ProductRepository extends JDBConnection {
 	 */
 	public int insert(Product product) {
 		int result = 0;
-		String sql = "INSERT INTO product(file, product_id, name, unit_price, description, manufacturer, category, units_in_stock, condition)" +
-					 "values(?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO product(file, product_id, name, unit_price, description, manufacturer, category, units_in_stock, `condition`)" +
+					 " VALUES(?,?,?,?,?,?,?,?,?)";
 		
 		try {
 			psmt = con.prepareStatement(sql);
@@ -144,21 +148,22 @@ public class ProductRepository extends JDBConnection {
 	 * @return
 	 */
 	public int update(Product product) {
-		 String sql = "UPDATE product SET file = ?, product_id = ?, name = ?, unit_price = ?, description = ?, manufacturer = ?, category = ?, units_in_stock = ?, condition = ? WHERE product_id = ?";
+		String sql = "UPDATE product SET name = ?, unit_price = ?, description = ?, manufacturer = ?, category = ?, units_in_stock = ?, `condition` = ?, file = ? WHERE product_id = ?";
+
 	     int result = 0;
 	        
 	     try {
 	    	 	psmt = con.prepareStatement(sql);
 	    	 	
-	            psmt.setString(1, product.getFile()); 
-	            psmt.setString(2,product.getProductId());
-	            psmt.setString(3, product.getName());       
-	            psmt.setInt(4, product.getUnitPrice());                  
-	            psmt.setString(5, product.getDescription());      
-	            psmt.setString(6, product.getManufacturer());      
-	            psmt.setString(7, product.getCategory());      
-	            psmt.setLong(8, product.getUnitsInStock());      
-	            psmt.setString(9, product.getCondition());      
+	    	 	psmt.setString(1, product.getName());
+	    	 	psmt.setInt(2, product.getUnitPrice());
+	    	 	psmt.setString(3, product.getDescription());
+	    	 	psmt.setString(4, product.getManufacturer());
+	    	 	psmt.setString(5, product.getCategory());
+	    	 	psmt.setLong(6, product.getUnitsInStock());
+	    	 	psmt.setString(7, product.getCondition());
+	    	 	psmt.setString(8, product.getFile());
+	    	 	psmt.setString(9, product.getProductId());     
 
 	            result = psmt.executeUpdate();               
 		        } catch (SQLException e) {

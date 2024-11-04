@@ -12,7 +12,6 @@
 	<jsp:include page="/layout/link.jsp" />
 </head>
 <body>   
-	
 	<jsp:include page="/layout/header.jsp" />
 	<div class="px-4 py-5 my-5 text-center">
 		<h1 class="display-5 fw-bold text-body-emphasis">메인화면</h1>

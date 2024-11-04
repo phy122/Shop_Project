@@ -26,18 +26,15 @@
         }
     </script>
 </head>
-<body>s
+<body>
 	<jsp:include page="/layout/header.jsp" />
 	<div class="px-4 py-5 my-5 text-center">
 		<h1 class="display-5 fw-bold text-body-emphasis">상품 편집</h1>
 		<div class="col-lg-6 mx-auto">
 			<p class="lead mb-4">쇼핑몰 상품 목록 입니다.</p>
 			<div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-			
 				<a href="<%= root %>/shop/add.jsp" class="btn btn-primary btn-lg px-4 gap-3">상품 등록</a>
-				<!-- [NEW] 상품 편집 버튼 추가 -->
 				<a href="<%= root %>/shop/products.jsp" class="btn btn-success btn-lg px-4 gap-3">상품 목록</a>
-				
 			</div>
 		</div>
 	</div>
@@ -49,7 +46,7 @@
 					<div class="card p-3">
 						<!-- 이미지 영역 -->
 						<div class="img-content">
-							<img src="${product.file}" class="w-100 p-2" alt="${product.name}">
+							<img src="<%= root %>/shop/img?id=${product.productId}" class="w-100 p-2" alt="${product.name}">
 						</div>
 						<!-- 컨텐츠 영역 -->
 						<div class="content">
@@ -57,22 +54,19 @@
 				            <p style="font-size: 15px;">${product.description}</p>
 				            <p class="text-end price">${product.unitPrice} 원</p>
 				            <p class="d-flex justify-content-between">
-								<!-- [NEW] 수정 버튼으로 변경 -->
-								<a href="<%= root %>/shop/update.jsp?id=${product.productId}" class="btn btn-primary mx-2">수정</a>
-								<!-- [NEW] 삭제 버튼 추가 -->
-								 <a href="javascript:;" class="btn btn-danger mx-2" onclick="deleteProduct('${product.productId}')">삭제</a>
+								<!-- 수정 버튼 -->
+								<a href="<%= root %>/shop/update.jsp?product_id=${product.productId}" class="btn btn-primary mx-2">수정</a>
+								<!-- 삭제 버튼 -->
+								<a href="javascript:;" class="btn btn-danger mx-2" onclick="deleteProduct('${product.productId}')">삭제</a>
 							</p>
 						</div>						
 					</div>
 				</div>
-			
-				</c:forEach>
-			
+			</c:forEach>
 		</div>
 	</div>
-			
-			
-			<jsp:include page="/layout/footer.jsp" />
+	
+	<jsp:include page="/layout/footer.jsp" />
 	<jsp:include page="/layout/script.jsp" />
 </body>
 </html>

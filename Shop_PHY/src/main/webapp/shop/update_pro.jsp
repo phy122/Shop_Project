@@ -1,52 +1,82 @@
-<%@page import="shop.dao.ProductRepository"%>
-<%@page import="shop.dto.Product"%>
 <%@page import="java.io.File"%>
-<%@page import="java.io.IOException"%>
-<%@page import="javax.servlet.ServletException"%>
-<%@page import="javax.servlet.annotation.MultipartConfig"%>
-<%@page import="javax.servlet.http.HttpServletRequest"%>
-<%@page import="javax.servlet.http.HttpServletResponse"%>
-<%@page import="javax.servlet.http.Part"%>
-<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>상품 수정 처리</title>
-</head>
-<body>
+<%@page import="java.util.Iterator"%>
+<%@page import="org.apache.commons.fileupload.FileItem"%>
+<%@page import="java.util.List"%>
+<%@page import="org.apache.commons.fileupload.DiskFileUpload"%>
+<%@page import="shop.dto.Product"%>
+<%@page import="shop.dao.ProductRepository"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%
-    // 파일 저장 경로 지정
-    String savePath = application.getRealPath("/img"); // 이미지 파일 저장 경로
-    File fileSaveDir = new File(savePath);
-    if (!fileSaveDir.exists()) {
-        fileSaveDir.mkdirs(); // 디렉토리가 없으면 생성
-    }
-
-    String productId = request.getParameter("productId");
-    String name = request.getParameter("name");
-    int unitPrice = Integer.parseInt(request.getParameter("unitPrice"));
-    String description = request.getParameter("description");
-    String manufacturer = request.getParameter("manufacturer");
-    String category = request.getParameter("category");
-    long unitsInStock = Long.parseLong(request.getParameter("unitsInStock"));
-    String condition = request.getParameter("condition");
-    String fileName = ""; // 파일 이름 초기화
-
-    // 파일 처리
-    if (request.getPart("file") != null) {
-        try {
-            Part filePart = request.getPart("file");
-            fileName = filePart.getSubmittedFileName(); // 업로드된 파일 이름 가져오기
-            filePart.write(savePath + File.separator + fileName); // 파일 저장
-        } catch (IOException | ServletException e) {
-            e.printStackTrace();
+    // 파일 업로드 디렉토리 설정
+    String filePath = "C:/upload";
+    
+    DiskFileUpload upload = new DiskFileUpload();
+    upload.setSizeMax(10 * 1000 * 1000);  // 10MB - 파일 최대 크기
+    upload.setSizeThreshold(4 * 1024);     // 4KB - 메모리상의 최대 크기
+    upload.setRepositoryPath(filePath);    // 임시 저장 경로
+    
+    List<FileItem> items = upload.parseRequest(request);
+    Iterator params = items.iterator();
+    
+    String productId = "";
+    String name = "";
+    int unitPrice = 0;
+    String description = "";
+    String manufacturer = "";
+    String category = "";
+    int unitsInStock = 0;
+    String condition = "";
+    String existingFile = "";
+    
+    FileItem fileItem = null;
+    while (params.hasNext()) {
+        FileItem item = (FileItem) params.next();
+        
+        // 일반 데이터
+        if (item.isFormField()) {
+            String itemName = item.getFieldName();
+            String value = item.getString("utf-8");
+            out.println(name + " : " + value + "<br>");
+            
+            if (itemName.equals("productId")) productId = value;
+            else if (itemName.equals("name")) name = value;
+            else if (itemName.equals("unitPrice")) unitPrice = Integer.parseInt(value);
+            else if (itemName.equals("description")) description = value;
+            else if (itemName.equals("manufacturer")) manufacturer = value;
+            else if (itemName.equals("category")) category = value;
+            else if (itemName.equals("unitsInStock")) unitsInStock = Integer.parseInt(value);
+            else if (itemName.equals("condition")) condition = value;
+            else if (itemName.equals("existingFile")) existingFile = value;
+        } else {
+            fileItem = item;  // 파일 데이터
         }
     }
+    
+    // 파일 업로드 처리
+    String fileFieldName = (fileItem != null) ? fileItem.getFieldName() : "";
+    String fileName = (fileItem != null) ? fileItem.getName() : "";
+    
+    if (fileName != null && !fileName.isEmpty()) {  // 새로운 파일이 있는지 확인
+        // 경로에서 파일 이름만 추출
+        fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+        
+        // 기존 파일 이름만 추출하여 비교
+        String existingFileName = existingFile.substring(existingFile.lastIndexOf("/") + 1);
+        
+        if (!fileName.equals(existingFileName)) {  // 기존 파일 이름과 다를 때만 업로드
+            filePath = filePath + "/" + fileName;
+            
+            File file = new File(filePath);
+            fileItem.write(file);  // 파일 업로드
+        } else {
+            filePath = existingFile;  // 기존 파일 경로 사용
+        }
+    } else {
+        filePath = existingFile;  // 새로운 파일이 없으면 기존 파일 경로 사용
+    }
 
-    // Product 객체 생성 및 데이터 설정
+    // Product 객체에 데이터 설정
     Product product = new Product();
     product.setProductId(productId);
     product.setName(name);
@@ -56,18 +86,14 @@
     product.setCategory(category);
     product.setUnitsInStock(unitsInStock);
     product.setCondition(condition);
-    product.setFile(fileName); // 저장된 파일 경로 설정
+    product.setFile(filePath);
 
-    // 상품 정보 업데이트
-    ProductRepository productRepository = new ProductRepository();
-    int result = productRepository.update(product); // update 메서드를 호출하여 DB에 업데이트
-
+    ProductRepository productDAO = new ProductRepository();
+    int result = productDAO.update(product);
+    
     if (result > 0) {
-        out.println("<script>alert('상품이 성공적으로 수정되었습니다.');</script>");
+        out.println("<script>alert('제품이 성공적으로 수정되었습니다!'); location.href='products.jsp';</script>");
     } else {
-        out.println("<script>alert('상품 수정에 실패했습니다.');</script>");
+        out.println("<script>alert('제품 수정에 실패했습니다.'); history.back();</script>");
     }
 %>
-    <a href="products.jsp">상품 목록으로 돌아가기</a>
-</body>
-</html>

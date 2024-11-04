@@ -72,10 +72,10 @@
                 </table>
                 <div class="mt-4">
                     <form name="addForm" action="<%= root %>/shop/addCart.jsp" method="post">
-                        <input type="hidden" name="id" value="${product.productId}">
+                        <input type="hidden" name="productId" value="${product.productId}">
                         <div class="btn-box d-flex justify-content-end">
                             <a href="<%= root %>/shop/cart.jsp" class="btn btn-lg btn-warning mx-3">장바구니</a>
-                            <a href="javascript:;" class="btn btn-lg btn-success mx-3" onclick="addToCart()">주문하기</a>
+                            <button type="submit" class="btn btn-lg btn-success mx-3">주문하기</button>
                         </div>
                     </form>
                 </div>

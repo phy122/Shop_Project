@@ -39,14 +39,10 @@
 		    <c:set var="item" value="<%= product %>" />
 		    
 		    <div class="input-group row">
+		     <img src="<%= request.getContextPath() %>/shop/img?id=${product.productId}" class="w-100 p-2" alt="${product.name}">
 		        <label class="input-group-text col-md-2" id="">상품 이미지</label>
 		        <input type="file" class="form-control" name="file" id="fileInput">
 		    </div>
-		    <div class="input-group mb-3 row">
-	        	<label class="input-group-text col-md-2" id="">기존 파일</label>
-	        	<span class="form-control text-muted" id="fileName" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${product.file}</span> <!-- 기존 파일 이름 표시 -->
-		        <input type="hidden" name="existingFile" value="${product.file}">
-		    </div>	
 		    
 		    <div class="input-group mb-3 row">
 		        <label class="input-group-text col-md-2" id="">상품 코드</label>
